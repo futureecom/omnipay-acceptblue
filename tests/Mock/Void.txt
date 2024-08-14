@@ -1,0 +1,17 @@
+HTTP/2 200 
+date: Wed, 18 Aug 2021 07:46:17 GMT
+content-type: text/html; charset=utf-8
+content-length: 455
+cache-control: no-cache
+pragma: no-cache
+expires: -1
+server: Microsoft-IIS/10.0
+
+{
+  "version": "string",
+  "status": "Approved",
+  "status_code": "A",
+  "error_message": "string",
+  "error_code": "string",
+  "error_details": "string"
+}

@@ -1,0 +1,58 @@
+{
+    "name": "futureecom/omnipay-acceptblue",
+    "description": "Accept Blue driver for the Omnipay payment processing library.",
+    "keywords": [
+        "gateway",
+        "merchant",
+        "omnipay",
+        "pay",
+        "payment",
+        "acceptblue"
+    ],
+    "type": "library",
+    "homepage": "https://www.futureecom.com",
+    "scripts": {
+        "test": "phpunit"
+    },
+    "require": {
+        "php": "^8.1",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "omnipay/common": "^3.0",
+        "symfony/http-client": "^7.1",
+        "guzzlehttp/guzzle": "^7.0",
+        "php-http/guzzle7-adapter": "^1.0"
+    },
+    "require-dev": {
+        "omnipay/tests": "^4.1",
+        "symfony/var-dumper": "^5.0",
+        "rector/rector": "^0.14.6",
+        "laravel/pint": "^1.2",
+        "http-interop/http-factory-guzzle": "^1.2",
+        "phpunit/phpunit": "^9.6",
+        "php-http/mock-client": "^1.6"
+
+    },
+    "autoload": {
+        "psr-4": {
+            "Omnipay\\AcceptBlue\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Avi Rosenblatt",
+            "email": "avi@futureecom.com"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}
