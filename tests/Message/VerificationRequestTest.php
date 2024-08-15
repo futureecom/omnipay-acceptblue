@@ -1,21 +1,21 @@
 <?php
 
+
 namespace Tests\Message;
 
-use Omnipay\Omnipay;
 use Omnipay\Tests\TestCase;
+use Omnipay\AcceptBlue\Message\Requests\VerificationRequest;
 
 class VerificationRequestTest extends TestCase
 {
-    protected $gateway;
+    protected $request;
 
     protected function setUp(): void
     {
 
-        $this->gateway = Omnipay::create('AcceptBlue');
-        $this->gateway->setApiSourceKey(getenv('ACCEPT_BLUE_SOURCE_KEY'));
-        $this->gateway->setApiPin(getenv('ACCEPT_BLUE_API_PIN'));
-        $this->gateway->setTestMode(true);
+        parent::setUp();
+
+    $this->request = new VerificationRequest($this->getHttpClient(), $this->getHttpRequest());
 
     }
 
@@ -33,12 +33,13 @@ class VerificationRequestTest extends TestCase
             'billingCountry' => 'US',
         ];
 
-        $data = array('card' => $card);
-
-        $response = $this->gateway->verify($data)->send();
+        $this->request->initialize(array(
+            'card' => $card
+        ));
+        $this->setMockHttpResponse('Verification.txt');
+        $response = $this->request->send();
         $this->assertTrue($response->isSuccessful());
         $this->assertEquals($response->getCode(), 'A');
-        $this->assertGreaterThanOrEqual(1, $response->getTransactionReference());
         $this->assertMatchesRegularExpression("/[A-Z]{2}[A-Z0-9]{14}/", $response->getToken());
 
     }

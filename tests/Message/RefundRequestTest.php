@@ -7,9 +7,6 @@ use Omnipay\Tests\TestCase;
 
 class RefundRequestTest extends TestCase
 {
-    protected $gateway;
-
-    protected $transactionReference;
 
     protected $request;
 

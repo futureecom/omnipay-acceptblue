@@ -1,11 +1,5 @@
-HTTP/2 200 
-date: Wed, 18 Aug 2021 08:24:00 GMT
-content-type: text/html; charset=utf-8
-content-length: 466
-cache-control: no-cache
-pragma: no-cache
-expires: -1
-server: Microsoft-IIS/10.0
+HTTP/1.1 200 OK
+Content-Type: application/json
 
 {
   "version": "string",
@@ -20,7 +14,7 @@ server: Microsoft-IIS/10.0
   "cvv2_result_code": "M",
   "card_type": "string",
   "last_4": "string",
-  "card_ref": "string",
+  "card_ref": "AA1234567890AABB",
   "bin_type": {
     "type": "C"
   },

@@ -1,34 +1,21 @@
 <?php
 
+
 namespace Tests\Message;
 
-use Omnipay\Omnipay;
 use Omnipay\Tests\TestCase;
+use Omnipay\AcceptBlue\Message\Requests\CreditRequest;
 
 class CreditRequestTest extends TestCase
 {
-    protected $gateway;
-
-    protected $token;
-
+    protected $request;
+    
     protected function setUp(): void
     {
 
-        $this->gateway = Omnipay::create('AcceptBlue');
-        $this->gateway->setApiSourceKey(getenv('ACCEPT_BLUE_SOURCE_KEY'));
-        $this->gateway->setApiPin(getenv('ACCEPT_BLUE_API_PIN'));
-        $this->gateway->setTestMode(true);
+        parent::setUp();
 
-        $card = [
-            'number' => '4111111111111111',
-            'expiryMonth' => '12',
-            'expiryYear' => '2026',
-        ];
-        $data = array('card' => $card);
-
-        $response = $this->gateway->createCard($data)->send();
-
-        $this->token = $response->getToken();
+        $this->request = new CreditRequest($this->getHttpClient(), $this->getHttpRequest());
     }
 
     public function testCreditWithCreditCard()
@@ -45,9 +32,12 @@ class CreditRequestTest extends TestCase
             'billingCountry' => 'US',
         ];
 
-        $data = array('amount' => 5.00, 'card' => $card);
-
-        $response = $this->gateway->credit($data)->send();
+        $this->request->initialize(array(
+            'card' => $card,
+            'amount' => 5.00
+        ));
+        $this->setMockHttpResponse('Credit.txt');
+        $response = $this->request->send();
         $this->assertTrue($response->isSuccessful());
         $this->assertEquals($response->getCode(), 'A');
         $this->assertGreaterThanOrEqual(1, $response->getTransactionReference());
@@ -55,12 +45,15 @@ class CreditRequestTest extends TestCase
 
     public function testCreditWithToken()
     {
-        // Build the authorization request data with a credit card
-        $data = array('amount' => 5.00, 'cardReference' => $this->token);
-        // Send the request
-        $response = $this->gateway->credit($data)->send();
+        $this->request->initialize(array(
+            'cardReference' => 'abcd',
+            'amount' => 5.00
+        ));
+        $this->setMockHttpResponse('Credit.txt');
+        $response = $this->request->send();
         $this->assertTrue($response->isSuccessful());
         $this->assertEquals($response->getCode(), 'A');
         $this->assertGreaterThanOrEqual(1, $response->getTransactionReference());
+        
     }
 }

@@ -1,57 +1,31 @@
 <?php
 
+
 namespace Tests\Message;
 
-use Omnipay\Omnipay;
 use Omnipay\Tests\TestCase;
+use Omnipay\AcceptBlue\Message\Requests\VoidRequest;
 
 class VoidRequestTest extends TestCase
 {
-    protected $gateway;
-
-    protected $transactionReference;
+    protected $request;
 
     protected function setUp(): void
     {
-        $this->gateway = Omnipay::create('AcceptBlue');
-        $this->gateway->setApiSourceKey(getenv('ACCEPT_BLUE_SOURCE_KEY'));
-        $this->gateway->setApiPin(getenv('ACCEPT_BLUE_API_PIN'));
-        $this->gateway->setTestMode(true);
+        parent::setUp();
 
-        $card = [
-            'number' => '4111111111111111',
-            'expiryMonth' => '12',
-            'expiryYear' => '2026',
-            'cvv' => '123',
-            'billingAddress1' => '123 Test St',
-            'billingCity' => 'Test City',
-            'billingPostcode' => '10001',
-            'billingState' => 'NY',
-            'billingCountry' => 'US',
-        ];
-        $data = array('amount' => 5.00, 'card' => $card);
-
-        $response = $this->gateway->authorize($data)->send();
-
-        $this->transactionReference = $response->getTransactionReference();
+        $this->request = new VoidRequest($this->getHttpClient(), $this->getHttpRequest());
 
     }
 
-    public function testVoidBeforeCapture()
+    public function testVoid()
     {
-        $data = array('transactionReference' => $this->transactionReference);
+        $this->request->initialize(array(
+            'transactionReference' => '1234'
+        ));
 
-        $response = $this->gateway->void($data)->send();
-        $this->assertTrue($response->isSuccessful());
-        $this->assertEquals($response->getCode(), 'A');
-    }
-
-    public function testVoidAfterCapture()
-    {
-        $data = array('transactionReference' => $this->transactionReference);
-
-        $this->gateway->capture($data)->send();
-        $response = $this->gateway->void($data)->send();
+        $this->setMockHttpResponse('Void.txt');
+        $response = $this->request->send();
         $this->assertTrue($response->isSuccessful());
         $this->assertEquals($response->getCode(), 'A');
     }

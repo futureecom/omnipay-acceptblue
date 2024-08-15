@@ -1,20 +1,20 @@
 <?php
 
+
 namespace Tests\Message;
 
-use Omnipay\Omnipay;
 use Omnipay\Tests\TestCase;
+use Omnipay\AcceptBlue\Message\Requests\CreateCardRequest;
 
 class CreateCardRequestTest extends TestCase
 {
-    protected $gateway;
+    protected $request;
 
     public function setUp(): void
     {
-        $this->gateway = Omnipay::create('AcceptBlue');
-        $this->gateway->setApiSourceKey(getenv('ACCEPT_BLUE_SOURCE_KEY'));
-        $this->gateway->setApiPin(getenv('ACCEPT_BLUE_API_PIN'));
-        $this->gateway->setTestMode(true);
+        parent::setUp();
+
+        $this->request = new CreateCardRequest($this->getHttpClient(), $this->getHttpRequest());
     }
 
     public function testCreateCard(): void
@@ -24,10 +24,11 @@ class CreateCardRequestTest extends TestCase
             'expiryMonth' => '12',
             'expiryYear' => '2026',
         ];
-        $data = array('card' => $card);
-
-        $response = $this->gateway->createCard($data)->send();
-
+        $this->request->initialize(array(
+            'card' => $card
+        ));
+        $this->setMockHttpResponse('CreateCard.txt');
+        $response = $this->request->send();
         $this->assertMatchesRegularExpression("/[A-Z]{2}[A-Z0-9]{14}/", $response->getToken());
     }
 }
