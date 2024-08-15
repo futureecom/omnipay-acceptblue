@@ -1,0 +1,38 @@
+name: Testing
+
+on:
+  push:
+    branches: 
+    - master
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    name: PHP 8.3 Test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: pcov
+          tools: phpunit
+        env:
+          COMPOSER_TOKEN: ${{ secrets.TOKEN }}
+
+      - name: Validate composer.json
+        run: composer validate
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Run test suite
+        run: vendor/bin/phpunit --coverage-text
+        env:
+          ACCEPT_BLUE_SOURCE_KEY: ${{ secrets.ACCEPT_BLUE_SOURCE_KEY }}
+          ACCEPT_BLUE_API_PIN: ${{ secrets.ACCEPT_BLUE_API_PIN }}
