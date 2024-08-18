@@ -7,7 +7,7 @@ use Omnipay\Tests\TestCase;
 
 class CaptureRequestTest extends TestCase
 {
-    protected $request;
+    protected CaptureRequest $request;
 
     protected function setUp(): void
     {
@@ -19,7 +19,7 @@ class CaptureRequestTest extends TestCase
     public function testCapture(): void
     {
 
-        $this->request->initialize(array('transactionReference' => '1234'));
+        $this->request->initialize(['transactionReference' => '1234']);
 
         $this->setMockHttpResponse('Capture.txt');
         $response = $this->request->send();

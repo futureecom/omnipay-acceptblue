@@ -7,7 +7,7 @@ use Omnipay\Tests\TestCase;
 
 class CreateCardRequestTest extends TestCase
 {
-    protected $request;
+    protected CreateCardRequest $request;
 
     public function setUp(): void
     {
@@ -23,9 +23,11 @@ class CreateCardRequestTest extends TestCase
             'expiryMonth' => '12',
             'expiryYear' => '2026',
         ];
-        $this->request->initialize(array(
-            'card' => $card,
-        ));
+        $this->request->initialize(
+            [
+                'card' => $card,
+            ]
+        );
         $this->setMockHttpResponse('CreateCard.txt');
         $response = $this->request->send();
         $this->assertMatchesRegularExpression("/[A-Z]{2}[A-Z0-9]{14}/", $response->getToken());

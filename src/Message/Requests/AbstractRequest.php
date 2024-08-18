@@ -2,8 +2,9 @@
 
 namespace Omnipay\AcceptBlue\Message\Requests;
 
+use JsonException;
 use Omnipay\AcceptBlue\Message\Responses\Response;
-
+use Omnipay\Common\CreditCard;
 use Omnipay\Common\Message\AbstractRequest as OmnipayAbstractRequest;
 
 abstract class AbstractRequest extends OmnipayAbstractRequest
@@ -12,7 +13,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
     protected string $testEndpoint = 'https://api.develop.accept.blue/api/v2';
 
-    public function getApiSourceKey(): string
+    public function getApiSourceKey(): ?string
     {
         return $this->getParameter('apiSourceKey');
     }
@@ -22,7 +23,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->setParameter('apiSourceKey', $value);
     }
 
-    public function getApiPin(): string
+    public function getApiPin(): ?string
     {
         return $this->getParameter('apiPin');
     }
@@ -32,7 +33,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->setParameter('apiPin', $value);
     }
 
-    public function getNonce(): string
+    public function getNonce(): ?string
     {
         return $this->getParameter('nonce');
     }
@@ -42,7 +43,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->setParameter('nonce', $value);
     }
 
-    public function getSource(): string
+    public function getSource(): ?string
     {
         return $this->getParameter('source');
     }
@@ -52,7 +53,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->setParameter('source', $value);
     }
 
-    public function getCapture(): string
+    public function getCapture(): ?string
     {
         return $this->getParameter('capture');
     }
@@ -62,7 +63,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->setParameter('capture', $value);
     }
 
-    public function getSaveCard(): string
+    public function getSaveCard(): ?string
     {
         return $this->getParameter('save_card');
     }
@@ -72,7 +73,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->setParameter('save_card', $value);
     }
 
-    public function getCardNumber(): string
+    public function getCardNumber(): ?string
     {
         return $this->getParameter('card_number');
     }
@@ -82,7 +83,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->setParameter('card_number', $value);
     }
 
-    public function getCvv(): string
+    public function getCvv(): ?string
     {
         return $this->getParameter('cvv');
     }
@@ -92,7 +93,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->setParameter('cvv2', $value);
     }
 
-    public function getBillingAddress(): string
+    public function getBillingAddress(): ?string
     {
         return $this->getParameter('billingAddress');
     }
@@ -102,7 +103,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->setParameter('avs_address', $value);
     }
 
-    public function getBillingZip(): string
+    public function getBillingZip(): ?string
     {
         return $this->getParameter('billingZip');
     }
@@ -112,7 +113,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->setParameter('avs_zip', $value);
     }
 
-    public function getExpiryMonth(): string
+    public function getExpiryMonth(): ?string
     {
         return $this->getParameter('expiryMonth');
     }
@@ -122,7 +123,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->setParameter('expiryMonth', $value);
     }
 
-    public function getExpiryYear(): string
+    public function getExpiryYear(): ?string
     {
         return $this->getParameter('expiryYear');
     }
@@ -137,18 +138,23 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint;
     }
 
-    public function sendData($data): Response
+    public function sendData($data): ?Response
     {
         $headers = [
             'Content-Type' => 'application/json',
-            'Authorization' => 'Basic ' . base64_encode($this->getApiSourceKey() . ':' . $this->getApiPin()),
+            'Authorization' => sprintf('Basic %s', base64_encode(sprintf('%s:%s', $this->getApiSourceKey(), $this->getApiPin()))),
         ];
-        $httpResponse = $this->httpClient->request(
-            $this->getHttpMethod(),
-            $this->getEndpoint(),
-            $headers,
-            json_encode($data)
-        );
+
+        try {
+            $httpResponse = $this->httpClient->request(
+                $this->getHttpMethod(),
+                $this->getEndpoint(),
+                $headers,
+                json_encode($data)
+            );
+        } catch (JsonException $e) {
+            return null;
+        }
 
         return $this->createResponse($httpResponse->getBody()->getContents());
     }
@@ -156,6 +162,29 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     protected function createResponse(string $data): Response
     {
         return $this->response = new Response($this, $data);
+    }
+
+    protected function getPaymentDetails(): ?array
+    {
+        $card = $this->getCard();
+
+        if ($this->getNonce()) {
+            $data['source'] = 'nonce-' . $this->getNonce();
+        } elseif ($this->getCardReference()) {
+            $data['source'] = 'tkn-' . $this->getCardReference();
+        } elseif ($card instanceof CreditCard) {
+
+            $card->validate();
+
+            $data['card'] = $card->getNumber();
+            $data['expiry_month'] = $card->getExpiryMonth();
+            $data['expiry_year'] = $card->getExpiryYear();
+            $data['cvv2'] = $card->getCvv();
+            $data['avs_address'] = $card->getBillingAddress1();
+            $data['avs_zip'] = $card->getBillingPostcode();
+        }
+
+        return $data;
     }
 
     abstract protected function getHttpMethod(): string;

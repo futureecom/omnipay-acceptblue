@@ -3,6 +3,14 @@
 namespace Tests;
 
 use Omnipay\AcceptBlue\Gateway;
+use Omnipay\AcceptBlue\Message\Requests\AuthorizeRequest;
+use Omnipay\AcceptBlue\Message\Requests\CaptureRequest;
+use Omnipay\AcceptBlue\Message\Requests\CreateCardRequest;
+use Omnipay\AcceptBlue\Message\Requests\CreditRequest;
+use Omnipay\AcceptBlue\Message\Requests\RefundRequest;
+use Omnipay\AcceptBlue\Message\Requests\ReverseRequest;
+use Omnipay\AcceptBlue\Message\Requests\VerificationRequest;
+use Omnipay\AcceptBlue\Message\Requests\VoidRequest;
 use Omnipay\Tests\GatewayTestCase;
 
 class GatewayTest extends GatewayTestCase
@@ -14,7 +22,6 @@ class GatewayTest extends GatewayTestCase
         $this->gateway->setApiSourceKey(getenv('ACCEPT_BLUE_SOURCE_KEY'));
         $this->gateway->setApiPin(getenv('ACCEPT_BLUE_API_PIN'));
         $this->gateway->setTestMode(true);
-
     }
 
     public function testGatewayName(): void
@@ -24,14 +31,13 @@ class GatewayTest extends GatewayTestCase
 
     public function testAuthorize()
     {
-
         $request = $this->gateway->authorize([
             'amount' => '10.00',
             'currency' => 'USD',
             'token' => 'token123',
             'apiPin' => 'your-api-pin',
         ]);
-        $this->assertInstanceOf('Omnipay\AcceptBlue\Message\Requests\AuthorizeRequest', $request);
+        $this->assertInstanceOf(AuthorizeRequest::class, $request);
         $this->assertSame('10.00', $request->getAmount());
         $this->assertSame('token123', $request->getToken());
         $this->assertSame('your-api-pin', $request->getApiPin());
@@ -46,7 +52,7 @@ class GatewayTest extends GatewayTestCase
             'token' => 'token123',
             'apiPin' => 'your-api-pin',
         ]);
-        $this->assertInstanceOf('Omnipay\AcceptBlue\Message\Requests\AuthorizeRequest', $request);
+        $this->assertInstanceOf(AuthorizeRequest::class, $request);
         $this->assertSame('10.00', $request->getAmount());
         $this->assertSame('token123', $request->getToken());
         $this->assertSame('your-api-pin', $request->getApiPin());
@@ -60,7 +66,7 @@ class GatewayTest extends GatewayTestCase
             'token' => 'token123',
             'apiPin' => 'your-api-pin',
         ]);
-        $this->assertInstanceOf('Omnipay\AcceptBlue\Message\Requests\CaptureRequest', $request);
+        $this->assertInstanceOf(CaptureRequest::class, $request);
         $this->assertSame('abc123', $request->getTransactionReference());
         $this->assertSame('token123', $request->getToken());
         $this->assertSame('your-api-pin', $request->getApiPin());
@@ -74,7 +80,7 @@ class GatewayTest extends GatewayTestCase
             'token' => 'token123',
             'apiPin' => 'your-api-pin',
         ]);
-        $this->assertInstanceOf('Omnipay\AcceptBlue\Message\Requests\CaptureRequest', $request);
+        $this->assertInstanceOf(CaptureRequest::class, $request);
         $this->assertSame('abc123', $request->getTransactionReference());
         $this->assertSame('token123', $request->getToken());
         $this->assertSame('your-api-pin', $request->getApiPin());
@@ -88,7 +94,7 @@ class GatewayTest extends GatewayTestCase
             'amount' => '10.00',
             'apiPin' => 'your-api-pin',
         ]);
-        $this->assertInstanceOf('Omnipay\AcceptBlue\Message\Requests\RefundRequest', $request);
+        $this->assertInstanceOf(RefundRequest::class, $request);
         $this->assertSame('abc123', $request->getTransactionReference());
         $this->assertSame('10.00', $request->getAmount());
         $this->assertSame('your-api-pin', $request->getApiPin());
@@ -102,7 +108,7 @@ class GatewayTest extends GatewayTestCase
             'amount' => '10.00',
             'apiPin' => 'your-api-pin',
         ]);
-        $this->assertInstanceOf('Omnipay\AcceptBlue\Message\Requests\RefundRequest', $request);
+        $this->assertInstanceOf(RefundRequest::class, $request);
         $this->assertSame('abc123', $request->getTransactionReference());
         $this->assertSame('10.00', $request->getAmount());
         $this->assertSame('your-api-pin', $request->getApiPin());
@@ -115,7 +121,7 @@ class GatewayTest extends GatewayTestCase
             'transactionReference' => 'abc123',
             'apiPin' => 'your-api-pin',
         ]);
-        $this->assertInstanceOf('Omnipay\AcceptBlue\Message\Requests\VoidRequest', $request);
+        $this->assertInstanceOf(VoidRequest::class, $request);
         $this->assertSame('abc123', $request->getTransactionReference());
         $this->assertSame('your-api-pin', $request->getApiPin());
     }
@@ -127,7 +133,7 @@ class GatewayTest extends GatewayTestCase
             'transactionReference' => 'abc123',
             'apiPin' => 'your-api-pin',
         ]);
-        $this->assertInstanceOf('Omnipay\AcceptBlue\Message\Requests\VoidRequest', $request);
+        $this->assertInstanceOf(VoidRequest::class, $request);
         $this->assertSame('abc123', $request->getTransactionReference());
         $this->assertSame('your-api-pin', $request->getApiPin());
         $this->assertSame('https://api.develop.accept.blue/api/v2/transactions/void', $request->getEndpoint());
@@ -143,7 +149,7 @@ class GatewayTest extends GatewayTestCase
         ];
 
         $request = $this->gateway->createCard(['card' => $card]);
-        $this->assertInstanceOf('Omnipay\AcceptBlue\Message\Requests\CreateCardRequest', $request);
+        $this->assertInstanceOf(CreateCardRequest::class, $request);
     }
 
     public function testReverse()
@@ -156,7 +162,7 @@ class GatewayTest extends GatewayTestCase
         ];
 
         $request = $this->gateway->reverse(['card' => $card]);
-        $this->assertInstanceOf('Omnipay\AcceptBlue\Message\Requests\ReverseRequest', $request);
+        $this->assertInstanceOf(ReverseRequest::class, $request);
     }
 
     public function testCredit()
@@ -169,7 +175,7 @@ class GatewayTest extends GatewayTestCase
         ];
 
         $request = $this->gateway->credit(['card' => $card]);
-        $this->assertInstanceOf('Omnipay\AcceptBlue\Message\Requests\CreditRequest', $request);
+        $this->assertInstanceOf(CreditRequest::class, $request);
     }
 
     public function testVerification()
@@ -182,7 +188,7 @@ class GatewayTest extends GatewayTestCase
         ];
 
         $request = $this->gateway->verify(['card' => $card]);
-        $this->assertInstanceOf('Omnipay\AcceptBlue\Message\Requests\VerificationRequest', $request);
+        $this->assertInstanceOf(VerificationRequest::class, $request);
     }
 
     public function testTestMode()

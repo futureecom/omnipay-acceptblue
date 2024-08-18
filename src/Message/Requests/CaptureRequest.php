@@ -2,6 +2,8 @@
 
 namespace Omnipay\AcceptBlue\Message\Requests;
 
+use Symfony\Component\HttpFoundation\Request;
+
 class CaptureRequest extends AbstractRequest
 {
     public function getData(): array
@@ -20,6 +22,6 @@ class CaptureRequest extends AbstractRequest
 
     protected function getHttpMethod(): string
     {
-        return 'POST';
+        return Request::METHOD_POST;
     }
 }

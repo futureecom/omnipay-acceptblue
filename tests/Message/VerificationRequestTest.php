@@ -7,7 +7,7 @@ use Omnipay\Tests\TestCase;
 
 class VerificationRequestTest extends TestCase
 {
-    protected $request;
+    protected VerificationRequest $request;
 
     protected function setUp(): void
     {
@@ -30,9 +30,7 @@ class VerificationRequestTest extends TestCase
             'billingCountry' => 'US',
         ];
 
-        $this->request->initialize(array(
-            'card' => $card,
-        ));
+        $this->request->initialize(['card' => $card]);
         $this->setMockHttpResponse('Verification.txt');
         $response = $this->request->send();
         $this->assertTrue($response->isSuccessful());

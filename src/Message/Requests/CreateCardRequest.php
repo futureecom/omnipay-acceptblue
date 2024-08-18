@@ -6,6 +6,7 @@ use Omnipay\AcceptBlue\Message\Responses\CreateCardResponse;
 use Omnipay\Common\CreditCard;
 use Omnipay\Common\Exception\InvalidCreditCardException;
 use Omnipay\Common\Exception\InvalidRequestException;
+use Symfony\Component\HttpFoundation\Request;
 
 class CreateCardRequest extends AbstractRequest
 {
@@ -22,7 +23,9 @@ class CreateCardRequest extends AbstractRequest
             $data['expiry_month'] = $this->getExpiryMonth();
             $data['expiry_year'] = $this->getExpiryYear();
         } elseif ($card instanceof CreditCard) {
+
             $card->validate();
+
             $data['card'] = $card->getNumber();
             $data['expiry_month'] = $card->getExpiryMonth();
             $data['expiry_year'] = $card->getExpiryYear();
@@ -30,7 +33,7 @@ class CreateCardRequest extends AbstractRequest
         return $data;
     }
 
-    public function getCardType(): string
+    public function getCardType(): ?string
     {
         return $this->getParameter('cardType');
     }
@@ -40,7 +43,7 @@ class CreateCardRequest extends AbstractRequest
         return $this->setParameter('cardType', $value);
     }
 
-    public function getLast4(): string
+    public function getLast4(): ?string
     {
         return $this->getParameter('last4');
     }
@@ -55,12 +58,28 @@ class CreateCardRequest extends AbstractRequest
         return parent::getEndpoint() . '/saved-cards';
     }
 
-    protected function getHttpMethod(): string
+    public function sendData($data): CreateCardResponse
     {
-        return 'POST';
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode($this->getApiSourceKey() . ':' . $this->getApiPin()),
+        ];
+        $httpResponse = $this->httpClient->request(
+            $this->getHttpMethod(),
+            $this->getEndpoint(),
+            $headers,
+            json_encode($data)
+        );
+
+        return $this->createResponse($httpResponse->getBody()->getContents());
     }
 
-    protected function createResponse(string $data)
+    protected function getHttpMethod(): string
+    {
+        return Request::METHOD_POST;
+    }
+
+    protected function createResponse(string $data): CreateCardResponse
     {
         return $this->response = new CreateCardResponse($this, $data);
     }

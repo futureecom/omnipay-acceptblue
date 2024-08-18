@@ -5,13 +5,8 @@ namespace Omnipay\AcceptBlue\Message\Responses;
 use JsonException;
 use Omnipay\Common\Message\RequestInterface;
 
-class CreateCardResponse extends AbstractResponse
+class CreateCardResponse extends Response
 {
-    /**
-     * @var array
-     */
-    protected $data;
-
     /**
      * Response constructor.
      *
@@ -19,41 +14,30 @@ class CreateCardResponse extends AbstractResponse
      */
     public function __construct(RequestInterface $request, ?string $data)
     {
-        parent::__construct($request, json_decode($data, true, 512, JSON_THROW_ON_ERROR));
+        parent::__construct($request, $data);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function isSuccessful(): bool
     {
-        if (isset($this->data['cardRef']) && strlen($this->data['cardRef']) > 1) {
-            return true;
-        }
-        return false;
+        return (isset($this->data['cardRef']) && strlen($this->data['cardRef']) > 1);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getToken(): ?string
     {
         return $this->data['cardRef'] ?? null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getMessage(): ?string
     {
         return $this->data['error_message'] ?? null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getError(): ?string
     {
-        return json_encode($this->data['error_details']) ?? null;
+        try {
+            return json_encode($this->data['error_details'] ?? [], JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            return null;
+        }
     }
 }

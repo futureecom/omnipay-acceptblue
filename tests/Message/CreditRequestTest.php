@@ -7,7 +7,7 @@ use Omnipay\Tests\TestCase;
 
 class CreditRequestTest extends TestCase
 {
-    protected $request;
+    protected CreditRequest $request;
 
     protected function setUp(): void
     {
@@ -31,10 +31,12 @@ class CreditRequestTest extends TestCase
             'billingCountry' => 'US',
         ];
 
-        $this->request->initialize(array(
-            'card' => $card,
-            'amount' => 5.00,
-        ));
+        $this->request->initialize(
+            [
+                'card' => $card,
+                'amount' => 5.00,
+            ]
+        );
         $this->setMockHttpResponse('Credit.txt');
         $response = $this->request->send();
         $this->assertTrue($response->isSuccessful());
@@ -44,10 +46,12 @@ class CreditRequestTest extends TestCase
 
     public function testCreditWithToken()
     {
-        $this->request->initialize(array(
-            'cardReference' => 'abcd',
-            'amount' => 5.00,
-        ));
+        $this->request->initialize(
+            [
+                'cardReference' => 'abcd',
+                'amount' => 5.00,
+            ]
+        );
         $this->setMockHttpResponse('Credit.txt');
         $response = $this->request->send();
         $this->assertTrue($response->isSuccessful());

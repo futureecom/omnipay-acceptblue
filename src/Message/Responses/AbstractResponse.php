@@ -6,8 +6,12 @@ use Omnipay\Common\Message\AbstractResponse as OmnipayAbstractResponse;
 
 abstract class AbstractResponse extends OmnipayAbstractResponse
 {
-    public function isSuccessful()
+    public const STATUS_SUCCESS = 'success';
+
+    public const STATUS_APPROVED = 'Approved';
+
+    public function isSuccessful(): bool
     {
-        return isset($this->data['status']) && $this->data['status'] === 'success';
+        return $this->data['status'] ?? '' === AbstractResponse::STATUS_SUCCESS;
     }
 }

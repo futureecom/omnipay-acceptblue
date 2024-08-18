@@ -2,17 +2,18 @@
 
 namespace Omnipay\AcceptBlue\Message\Requests;
 
+use Symfony\Component\HttpFoundation\Request;
+
 class ReverseRequest extends AbstractRequest
 {
     public function getData(): array
     {
         $this->validate('transactionReference');
-        $card = $this->getCard();
 
         $data['reference_number'] = (int) $this->getTransactionReference();
 
         if ($this->getAmount()) {
-            $data['amount'] = (float) $this->getAmount();
+            $data['amount'] = $this->getAmount() ?? (float) $this->getAmount();
         }
 
         return $data;
@@ -25,6 +26,6 @@ class ReverseRequest extends AbstractRequest
 
     protected function getHttpMethod(): string
     {
-        return 'POST';
+        return Request::METHOD_POST;
     }
 }

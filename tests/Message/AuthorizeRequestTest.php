@@ -7,7 +7,7 @@ use Omnipay\Tests\TestCase;
 
 class AuthorizeRequestTest extends TestCase
 {
-    protected $request;
+    protected AuthorizeRequest $request;
 
     protected function setUp(): void
     {
@@ -32,10 +32,12 @@ class AuthorizeRequestTest extends TestCase
             'billingCountry' => 'US',
         ];
 
-        $this->request->initialize(array(
-            'card' => $card,
-            'amount' => 5.00,
-        ));
+        $this->request->initialize(
+            [
+                'card' => $card,
+                'amount' => 5.00,
+            ]
+        );
         $this->setMockHttpResponse('Authorize.txt');
 
         $response = $this->request->send();
@@ -48,10 +50,12 @@ class AuthorizeRequestTest extends TestCase
 
     public function testAuthorizeWithToken(): void
     {
-        $this->request->initialize(array(
-            'cardReference' => 'abcd',
-            'amount' => 5.00,
-        ));
+        $this->request->initialize(
+            [
+                'cardReference' => 'abcd',
+                'amount' => 5.00,
+            ]
+        );
         $this->setMockHttpResponse('Authorize.txt');
 
         $response = $this->request->send();

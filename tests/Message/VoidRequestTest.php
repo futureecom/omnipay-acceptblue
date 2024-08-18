@@ -7,19 +7,18 @@ use Omnipay\Tests\TestCase;
 
 class VoidRequestTest extends TestCase
 {
-    protected $request;
+    protected VoidRequest $request;
 
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->request = new VoidRequest($this->getHttpClient(), $this->getHttpRequest());
     }
 
     public function testVoid(): void
     {
-        $this->request->initialize(array(
-            'transactionReference' => '1234',
-        ));
+        $this->request->initialize(['transactionReference' => '1234']);
 
         $this->setMockHttpResponse('Void.txt');
         $response = $this->request->send();

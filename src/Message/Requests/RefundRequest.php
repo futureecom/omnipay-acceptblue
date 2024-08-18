@@ -3,12 +3,14 @@
 namespace Omnipay\AcceptBlue\Message\Requests;
 
 use Omnipay\Common\CreditCard;
+use Symfony\Component\HttpFoundation\Request;
 
 class RefundRequest extends AbstractRequest
 {
     public function getData(): array
     {
         $this->validate('transactionReference');
+
         $card = $this->getCard();
 
         $data['reference_number'] = (int) $this->getTransactionReference();
@@ -33,6 +35,6 @@ class RefundRequest extends AbstractRequest
 
     protected function getHttpMethod(): string
     {
-        return 'POST';
+        return Request::METHOD_POST;
     }
 }

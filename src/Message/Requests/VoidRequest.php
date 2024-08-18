@@ -2,11 +2,14 @@
 
 namespace Omnipay\AcceptBlue\Message\Requests;
 
+use Symfony\Component\HttpFoundation\Request;
+
 class VoidRequest extends AbstractRequest
 {
     public function getData(): array
     {
         $this->validate('transactionReference');
+
         $data['reference_number'] = (int) $this->getTransactionReference();
         return $data;
     }
@@ -18,6 +21,6 @@ class VoidRequest extends AbstractRequest
 
     protected function getHttpMethod(): string
     {
-        return 'POST';
+        return Request::METHOD_POST;
     }
 }
