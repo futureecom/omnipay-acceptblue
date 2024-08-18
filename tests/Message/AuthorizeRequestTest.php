@@ -2,8 +2,8 @@
 
 namespace Tests\Message;
 
-use Omnipay\Tests\TestCase;
 use Omnipay\AcceptBlue\Message\Requests\AuthorizeRequest;
+use Omnipay\Tests\TestCase;
 
 class AuthorizeRequestTest extends TestCase
 {
@@ -17,7 +17,7 @@ class AuthorizeRequestTest extends TestCase
 
     }
 
-    public function testAuthorizeWithCreditCard()
+    public function testAuthorizeWithCreditCard(): void
     {
 
         $card = [
@@ -34,30 +34,29 @@ class AuthorizeRequestTest extends TestCase
 
         $this->request->initialize(array(
             'card' => $card,
-            'amount' => 5.00
+            'amount' => 5.00,
         ));
         $this->setMockHttpResponse('Authorize.txt');
 
-
         $response = $this->request->send();
         $this->assertTrue($response->isSuccessful());
-        $this->assertEquals($response->getCode(), 'A');
+        $this->assertEquals('A', $response->getCode());
         $this->assertGreaterThanOrEqual(1, $response->getTransactionReference());
         $this->assertMatchesRegularExpression("/[A-Z]{2}[A-Z0-9]{14}/", $response->getToken());
 
     }
 
-    public function testAuthorizeWithToken()
+    public function testAuthorizeWithToken(): void
     {
         $this->request->initialize(array(
             'cardReference' => 'abcd',
-            'amount' => 5.00
+            'amount' => 5.00,
         ));
         $this->setMockHttpResponse('Authorize.txt');
-        
+
         $response = $this->request->send();
         $this->assertTrue($response->isSuccessful());
-        $this->assertEquals($response->getCode(), 'A');
+        $this->assertEquals('A', $response->getCode());
         $this->assertGreaterThanOrEqual(1, $response->getTransactionReference());
     }
 }

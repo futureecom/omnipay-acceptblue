@@ -7,7 +7,6 @@ use Omnipay\Tests\TestCase;
 
 class RefundRequestTest extends TestCase
 {
-
     protected $request;
 
     protected function setUp(): void
@@ -17,7 +16,7 @@ class RefundRequestTest extends TestCase
 
     }
 
-    public function testRefundFull()
+    public function testRefundFull(): void
     {
 
         $this->request->initialize(
@@ -28,11 +27,11 @@ class RefundRequestTest extends TestCase
         $this->setMockHttpResponse('Refund.txt');
         $response = $this->request->send();
         $this->assertTrue($response->isSuccessful());
-        $this->assertEquals($response->getCode(), 'A');
+        $this->assertEquals('A', $response->getCode());
 
     }
 
-    public function testRefundPartial()
+    public function testRefundPartial(): void
     {
         $this->request->initialize(
             array(
@@ -44,6 +43,6 @@ class RefundRequestTest extends TestCase
 
         $response = $this->request->send();
         $this->assertTrue($response->isSuccessful());
-        $this->assertEquals($response->getCode(), 'A');
+        $this->assertEquals('A', $response->getCode());
     }
 }

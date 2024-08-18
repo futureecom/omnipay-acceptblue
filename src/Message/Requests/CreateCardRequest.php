@@ -19,6 +19,8 @@ class CreateCardRequest extends AbstractRequest
 
         if ($this->getNonce()) {
             $data['source'] = 'nonce-' . $this->getNonce();
+            $data['expiry_month'] = $this->getExpiryMonth();
+            $data['expiry_year'] = $this->getExpiryYear();
         } elseif ($card instanceof CreditCard) {
             $card->validate();
             $data['card'] = $card->getNumber();
@@ -28,12 +30,32 @@ class CreateCardRequest extends AbstractRequest
         return $data;
     }
 
-    public function getEndpoint()
+    public function getCardType(): string
+    {
+        return $this->getParameter('cardType');
+    }
+
+    public function setCardType($value): self
+    {
+        return $this->setParameter('cardType', $value);
+    }
+
+    public function getLast4(): string
+    {
+        return $this->getParameter('last4');
+    }
+
+    public function setLast4($value): self
+    {
+        return $this->setParameter('last4', $value);
+    }
+
+    public function getEndpoint(): string
     {
         return parent::getEndpoint() . '/saved-cards';
     }
 
-    protected function getHttpMethod()
+    protected function getHttpMethod(): string
     {
         return 'POST';
     }

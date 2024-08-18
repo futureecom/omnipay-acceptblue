@@ -6,7 +6,7 @@ use Omnipay\Common\CreditCard;
 
 class RefundRequest extends AbstractRequest
 {
-    public function getData()
+    public function getData(): array
     {
         $this->validate('transactionReference');
         $card = $this->getCard();
@@ -26,12 +26,12 @@ class RefundRequest extends AbstractRequest
         return $data;
     }
 
-    public function getEndpoint()
+    public function getEndpoint(): string
     {
         return parent::getEndpoint() . '/transactions/refund';
     }
 
-    protected function getHttpMethod()
+    protected function getHttpMethod(): string
     {
         return 'POST';
     }

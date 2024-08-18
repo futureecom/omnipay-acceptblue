@@ -6,7 +6,7 @@ use Omnipay\Common\CreditCard;
 
 class VerificationRequest extends AbstractRequest
 {
-    public function getData()
+    public function getData(): array
     {
         $card = $this->getCard();
 
@@ -32,12 +32,12 @@ class VerificationRequest extends AbstractRequest
         return $data;
     }
 
-    public function getEndpoint()
+    public function getEndpoint(): string
     {
         return parent::getEndpoint() . '/transactions/verify';
     }
 
-    protected function getHttpMethod()
+    protected function getHttpMethod(): string
     {
         return 'POST';
     }

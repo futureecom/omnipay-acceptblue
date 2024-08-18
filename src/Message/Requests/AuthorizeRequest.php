@@ -6,7 +6,7 @@ use Omnipay\Common\CreditCard;
 
 class AuthorizeRequest extends AbstractRequest
 {
-    public function getData()
+    public function getData(): array
     {
         $this->validate('amount');
         $data['amount'] = (float) $this->getAmount();
@@ -38,12 +38,12 @@ class AuthorizeRequest extends AbstractRequest
         return $data;
     }
 
-    public function getEndpoint()
+    public function getEndpoint(): string
     {
         return parent::getEndpoint() . '/transactions/charge';
     }
 
-    protected function getHttpMethod()
+    protected function getHttpMethod(): string
     {
         return 'POST';
     }

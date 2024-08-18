@@ -1,15 +1,14 @@
 <?php
 
-
 namespace Tests\Message;
 
-use Omnipay\Tests\TestCase;
 use Omnipay\AcceptBlue\Message\Requests\CreditRequest;
+use Omnipay\Tests\TestCase;
 
 class CreditRequestTest extends TestCase
 {
     protected $request;
-    
+
     protected function setUp(): void
     {
 
@@ -18,7 +17,7 @@ class CreditRequestTest extends TestCase
         $this->request = new CreditRequest($this->getHttpClient(), $this->getHttpRequest());
     }
 
-    public function testCreditWithCreditCard()
+    public function testCreditWithCreditCard(): void
     {
         $card = [
             'number' => '4111111111111111',
@@ -34,12 +33,12 @@ class CreditRequestTest extends TestCase
 
         $this->request->initialize(array(
             'card' => $card,
-            'amount' => 5.00
+            'amount' => 5.00,
         ));
         $this->setMockHttpResponse('Credit.txt');
         $response = $this->request->send();
         $this->assertTrue($response->isSuccessful());
-        $this->assertEquals($response->getCode(), 'A');
+        $this->assertEquals('A', $response->getCode());
         $this->assertGreaterThanOrEqual(1, $response->getTransactionReference());
     }
 
@@ -47,13 +46,13 @@ class CreditRequestTest extends TestCase
     {
         $this->request->initialize(array(
             'cardReference' => 'abcd',
-            'amount' => 5.00
+            'amount' => 5.00,
         ));
         $this->setMockHttpResponse('Credit.txt');
         $response = $this->request->send();
         $this->assertTrue($response->isSuccessful());
-        $this->assertEquals($response->getCode(), 'A');
+        $this->assertEquals('A', $response->getCode());
         $this->assertGreaterThanOrEqual(1, $response->getTransactionReference());
-        
+
     }
 }

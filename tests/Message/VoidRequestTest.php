@@ -1,10 +1,9 @@
 <?php
 
-
 namespace Tests\Message;
 
-use Omnipay\Tests\TestCase;
 use Omnipay\AcceptBlue\Message\Requests\VoidRequest;
+use Omnipay\Tests\TestCase;
 
 class VoidRequestTest extends TestCase
 {
@@ -13,20 +12,18 @@ class VoidRequestTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
         $this->request = new VoidRequest($this->getHttpClient(), $this->getHttpRequest());
-
     }
 
-    public function testVoid()
+    public function testVoid(): void
     {
         $this->request->initialize(array(
-            'transactionReference' => '1234'
+            'transactionReference' => '1234',
         ));
 
         $this->setMockHttpResponse('Void.txt');
         $response = $this->request->send();
         $this->assertTrue($response->isSuccessful());
-        $this->assertEquals($response->getCode(), 'A');
+        $this->assertEquals('A', $response->getCode());
     }
 }

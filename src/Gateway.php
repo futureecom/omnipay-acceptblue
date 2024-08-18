@@ -2,16 +2,24 @@
 
 namespace Omnipay\AcceptBlue;
 
+use Omnipay\AcceptBlue\Message\Requests\AuthorizeRequest;
+use Omnipay\AcceptBlue\Message\Requests\CaptureRequest;
+use Omnipay\AcceptBlue\Message\Requests\CreateCardRequest;
+use Omnipay\AcceptBlue\Message\Requests\CreditRequest;
+use Omnipay\AcceptBlue\Message\Requests\RefundRequest;
+use Omnipay\AcceptBlue\Message\Requests\ReverseRequest;
+use Omnipay\AcceptBlue\Message\Requests\VerificationRequest;
+use Omnipay\AcceptBlue\Message\Requests\VoidRequest;
 use Omnipay\Common\AbstractGateway;
 
 class Gateway extends AbstractGateway
 {
-    public function getName()
+    public function getName(): string
     {
         return 'AcceptBlue';
     }
 
-    public function getDefaultParameters()
+    public function getDefaultParameters(): array
     {
         return [
             'apiSourceKey' => '',
@@ -20,63 +28,63 @@ class Gateway extends AbstractGateway
         ];
     }
 
-    public function getApiSourceKey()
+    public function getApiSourceKey(): string
     {
         return $this->getParameter('apiSourceKey');
     }
 
-    public function setApiSourceKey($value)
+    public function setApiSourceKey($value): self
     {
         return $this->setParameter('apiSourceKey', $value);
     }
 
-    public function getApiPin()
+    public function getApiPin(): string
     {
         return $this->getParameter('apiPin');
     }
 
-    public function setApiPin($value)
+    public function setApiPin($value): self
     {
         return $this->setParameter('apiPin', $value);
     }
 
-    public function authorize(array $parameters = [])
+    public function authorize(array $parameters = []): AuthorizeRequest
     {
-        return $this->createRequest('Omnipay\AcceptBlue\Message\Requests\AuthorizeRequest', $parameters);
+        return $this->createRequest(AuthorizeRequest::class, $parameters);
     }
 
-    public function capture(array $parameters = [])
+    public function capture(array $parameters = []): CaptureRequest
     {
-        return $this->createRequest('Omnipay\AcceptBlue\Message\Requests\CaptureRequest', $parameters);
+        return $this->createRequest(CaptureRequest::class, $parameters);
     }
 
-    public function refund(array $parameters = [])
+    public function refund(array $parameters = []): RefundRequest
     {
-        return $this->createRequest('Omnipay\AcceptBlue\Message\Requests\RefundRequest', $parameters);
+        return $this->createRequest(RefundRequest::class, $parameters);
     }
 
-    public function reverse(array $parameters = [])
+    public function reverse(array $parameters = []): ReverseRequest
     {
-        return $this->createRequest('Omnipay\AcceptBlue\Message\Requests\ReverseRequest', $parameters);
+        return $this->createRequest(ReverseRequest::class, $parameters);
     }
 
-    public function credit(array $parameters = [])
+    public function credit(array $parameters = []): CreditRequest
     {
-        return $this->createRequest('Omnipay\AcceptBlue\Message\Requests\CreditRequest', $parameters);
+        return $this->createRequest(CreditRequest::class, $parameters);
     }
 
-    public function void(array $parameters = [])
+    public function void(array $parameters = []): VoidRequest
     {
-        return $this->createRequest('Omnipay\AcceptBlue\Message\Requests\VoidRequest', $parameters);
+        return $this->createRequest(VoidRequest::class, $parameters);
     }
 
-    public function createCard(array $parameters = [])
+    public function createCard(array $parameters = []): CreateCardRequest
     {
-        return $this->createRequest('Omnipay\AcceptBlue\Message\Requests\CreateCardRequest', $parameters);
+        return $this->createRequest(CreateCardRequest::class, $parameters);
     }
 
-    public function verify(array $parameters = [])
+    public function verify(array $parameters = []): VerificationRequest
     {
-        return $this->createRequest('Omnipay\AcceptBlue\Message\Requests\VerificationRequest', $parameters);
+        return $this->createRequest(VerificationRequest::class, $parameters);
     }
 }

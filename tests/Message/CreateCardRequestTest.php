@@ -1,10 +1,9 @@
 <?php
 
-
 namespace Tests\Message;
 
-use Omnipay\Tests\TestCase;
 use Omnipay\AcceptBlue\Message\Requests\CreateCardRequest;
+use Omnipay\Tests\TestCase;
 
 class CreateCardRequestTest extends TestCase
 {
@@ -25,7 +24,7 @@ class CreateCardRequestTest extends TestCase
             'expiryYear' => '2026',
         ];
         $this->request->initialize(array(
-            'card' => $card
+            'card' => $card,
         ));
         $this->setMockHttpResponse('CreateCard.txt');
         $response = $this->request->send();
