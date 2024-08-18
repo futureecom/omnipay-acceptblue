@@ -20,15 +20,15 @@ class CreateCardRequest extends AbstractRequest
 
         if ($this->getNonce()) {
             $data['source'] = 'nonce-' . $this->getNonce();
-            $data['expiry_month'] = $this->getExpiryMonth();
-            $data['expiry_year'] = $this->getExpiryYear();
+            $data['expiry_month'] = (int) $this->getExpiryMonth();
+            $data['expiry_year'] = (int) $this->getExpiryYear();
         } elseif ($card instanceof CreditCard) {
 
             $card->validate();
 
             $data['card'] = $card->getNumber();
-            $data['expiry_month'] = $card->getExpiryMonth();
-            $data['expiry_year'] = $card->getExpiryYear();
+            $data['expiry_month'] = (int) $card->getExpiryMonth();
+            $data['expiry_year'] = (int) $card->getExpiryYear();
         }
         return $data;
     }

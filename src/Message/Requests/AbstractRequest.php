@@ -177,8 +177,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             $card->validate();
 
             $data['card'] = $card->getNumber();
-            $data['expiry_month'] = $card->getExpiryMonth();
-            $data['expiry_year'] = $card->getExpiryYear();
+            $data['expiry_month'] = (int) $card->getExpiryMonth();
+            $data['expiry_year'] = (int) $card->getExpiryYear();
             $data['cvv2'] = $card->getCvv();
             $data['avs_address'] = $card->getBillingAddress1();
             $data['avs_zip'] = $card->getBillingPostcode();
