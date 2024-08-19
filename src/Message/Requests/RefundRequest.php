@@ -20,8 +20,9 @@ class RefundRequest extends AbstractRequest
         if ($this->getAmount()) {
             $data['amount'] = (float) $this->getAmount();
         }
-
-        if ($card instanceof CreditCard && $card->getCvv()) {
+        if ($this->getCvv()) {
+            $data['cvv2'] = $this->getCvv();
+        } elseif($card instanceof CreditCard && $card->getCvv()) {
             $data['cvv2'] = $card->getCvv();
         }
 

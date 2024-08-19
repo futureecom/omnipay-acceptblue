@@ -183,7 +183,15 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             $data['cvv2'] = $card->getCvv();
             $data['avs_address'] = $card->getBillingAddress1();
             $data['avs_zip'] = $card->getBillingPostcode();
+
+            return $data;
         }
+
+        $data['expiry_month'] = $this->getExpiryMonth() ? (int) $this->getExpiryMonth() : null;
+        $data['expiry_year'] = $this->getExpiryYear() ? (int) $this->getExpiryYear() : null;
+        $data['cvv2'] = $this->getCvv() ? $this->getCvv() : null;
+        $data['avs_address'] = $this->getBillingAddress() ? $this->getBillingAddress() : null;
+        $data['avs_zip'] = $this->getBillingZip() ? $this->getBillingZip() : null;
 
         return $data;
     }
