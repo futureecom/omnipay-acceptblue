@@ -34,26 +34,6 @@ class CreateCardRequest extends AbstractRequest
         return $data;
     }
 
-    public function getCardType(): ?string
-    {
-        return $this->getParameter('cardType');
-    }
-
-    public function setCardType($value): self
-    {
-        return $this->setParameter('cardType', $value);
-    }
-
-    public function getLast4(): ?string
-    {
-        return $this->getParameter('last4');
-    }
-
-    public function setLast4($value): self
-    {
-        return $this->setParameter('last4', $value);
-    }
-
     public function getEndpoint(): string
     {
         return parent::getEndpoint() . '/saved-cards';
