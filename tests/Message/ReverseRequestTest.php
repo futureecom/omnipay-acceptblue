@@ -18,7 +18,11 @@ class ReverseRequestTest extends TestCase
 
     public function testReverseFull(): void
     {
-        $this->request->initialize(['transactionReference' => '1234']);
+        $this->request->initialize([
+            'apiSourceKey' => 'abcd',
+            'apiPin' => '1234',
+            'transactionReference' => '1234',
+        ]);
 
         $this->setMockHttpResponse('Reverse.txt');
         $response = $this->request->send();
@@ -30,6 +34,8 @@ class ReverseRequestTest extends TestCase
     {
         $this->request->initialize(
             [
+                'apiSourceKey' => 'abcd',
+                'apiPin' => '1234',
                 'transactionReference' => '1234',
                 'amount' => 2.00,
             ]

@@ -30,12 +30,15 @@ class VerificationRequestTest extends TestCase
             'billingCountry' => 'US',
         ];
 
-        $this->request->initialize(['card' => $card]);
+        $this->request->initialize([
+            'apiSourceKey' => 'abcd',
+            'apiPin' => '1234',
+            'card' => $card,
+        ]);
         $this->setMockHttpResponse('Verification.txt');
         $response = $this->request->send();
         $this->assertTrue($response->isSuccessful());
         $this->assertEquals('A', $response->getCode());
         $this->assertMatchesRegularExpression("/[A-Z]{2}[A-Z0-9]{14}/", $response->getToken());
-
     }
 }

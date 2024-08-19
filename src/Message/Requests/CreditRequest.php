@@ -8,10 +8,15 @@ class CreditRequest extends AbstractRequest
 {
     public function getData(): array
     {
+        $data = array();
+
         $this->validate('amount');
         $data['amount'] = (float) $this->getAmount();
 
-        $data += $this->getPaymentDetails();
+        $data = [
+            ...$data,
+            ...$this->getPaymentDetails(),
+        ];
 
         if ($this->getTransactionId()) {
             $data['transaction_details']['order_number'] = $this->getTransactionId();

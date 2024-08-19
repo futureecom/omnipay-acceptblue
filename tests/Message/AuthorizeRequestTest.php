@@ -14,12 +14,10 @@ class AuthorizeRequestTest extends TestCase
         parent::setUp();
 
         $this->request = new AuthorizeRequest($this->getHttpClient(), $this->getHttpRequest());
-
     }
 
     public function testAuthorizeWithCreditCard(): void
     {
-
         $card = [
             'number' => '4111111111111111',
             'expiryMonth' => '12',
@@ -34,6 +32,8 @@ class AuthorizeRequestTest extends TestCase
 
         $this->request->initialize(
             [
+                'apiSourceKey' => 'abcd',
+                'apiPin' => '1234',
                 'card' => $card,
                 'amount' => 5.00,
             ]
@@ -45,13 +45,14 @@ class AuthorizeRequestTest extends TestCase
         $this->assertEquals('A', $response->getCode());
         $this->assertGreaterThanOrEqual(1, $response->getTransactionReference());
         $this->assertMatchesRegularExpression("/[A-Z]{2}[A-Z0-9]{14}/", $response->getToken());
-
     }
 
     public function testAuthorizeWithToken(): void
     {
         $this->request->initialize(
             [
+                'apiSourceKey' => 'abcd',
+                'apiPin' => '1234',
                 'cardReference' => 'abcd',
                 'amount' => 5.00,
             ]

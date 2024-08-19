@@ -18,7 +18,11 @@ class VoidRequestTest extends TestCase
 
     public function testVoid(): void
     {
-        $this->request->initialize(['transactionReference' => '1234']);
+        $this->request->initialize([
+            'apiSourceKey' => 'abcd',
+            'apiPin' => '1234',
+            'transactionReference' => '1234',
+        ]);
 
         $this->setMockHttpResponse('Void.txt');
         $response = $this->request->send();

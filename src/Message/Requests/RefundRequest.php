@@ -9,6 +9,8 @@ class RefundRequest extends AbstractRequest
 {
     public function getData(): array
     {
+        $data = array();
+
         $this->validate('transactionReference');
 
         $card = $this->getCard();
@@ -19,10 +21,8 @@ class RefundRequest extends AbstractRequest
             $data['amount'] = (float) $this->getAmount();
         }
 
-        if ($card instanceof CreditCard) {
-            if($card->getCvv()) {
-                $data['cvv2'] = $card->getCvv();
-            }
+        if ($card instanceof CreditCard && $card->getCvv()) {
+            $data['cvv2'] = $card->getCvv();
         }
 
         return $data;

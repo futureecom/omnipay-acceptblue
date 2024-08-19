@@ -10,9 +10,7 @@ class CaptureRequest extends AbstractRequest
     {
         $this->validate('transactionReference');
 
-        $data['reference_number'] = (int) $this->getTransactionReference();
-
-        return $data;
+        return ['reference_number' => (int) $this->getTransactionReference()];
     }
 
     public function getEndpoint(): string

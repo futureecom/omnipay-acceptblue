@@ -18,8 +18,11 @@ class CaptureRequestTest extends TestCase
 
     public function testCapture(): void
     {
-
-        $this->request->initialize(['transactionReference' => '1234']);
+        $this->request->initialize([
+            'apiSourceKey' => 'abcd',
+            'apiPin' => '1234',
+            'transactionReference' => '1234',
+        ]);
 
         $this->setMockHttpResponse('Capture.txt');
         $response = $this->request->send();

@@ -8,6 +8,8 @@ class VoidRequest extends AbstractRequest
 {
     public function getData(): array
     {
+        $data = array();
+
         $this->validate('transactionReference');
 
         $data['reference_number'] = (int) $this->getTransactionReference();

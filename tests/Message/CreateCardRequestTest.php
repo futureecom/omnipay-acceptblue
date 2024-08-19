@@ -25,6 +25,8 @@ class CreateCardRequestTest extends TestCase
         ];
         $this->request->initialize(
             [
+                'apiSourceKey' => 'abcd',
+                'apiPin' => '1234',
                 'card' => $card,
             ]
         );

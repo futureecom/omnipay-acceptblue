@@ -5,6 +5,7 @@ namespace Omnipay\AcceptBlue\Message\Requests;
 use JsonException;
 use Omnipay\AcceptBlue\Message\Responses\Response;
 use Omnipay\Common\CreditCard;
+use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\AbstractRequest as OmnipayAbstractRequest;
 
 abstract class AbstractRequest extends OmnipayAbstractRequest
@@ -142,7 +143,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     {
         $headers = [
             'Content-Type' => 'application/json',
-            'Authorization' => sprintf('Basic %s', base64_encode(sprintf('%s:%s', $this->getApiSourceKey(), $this->getApiPin()))),
+            'Authorization' => $this->getBearer(),
         ];
 
         try {
@@ -150,10 +151,10 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
                 $this->getHttpMethod(),
                 $this->getEndpoint(),
                 $headers,
-                json_encode($data)
+                json_encode($data, JSON_THROW_ON_ERROR)
             );
         } catch (JsonException $e) {
-            return null;
+            throw new InvalidRequestException(sprintf("Invalid fields sent %s", print_r($data, true)));
         }
 
         return $this->createResponse($httpResponse->getBody()->getContents());
@@ -166,6 +167,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
     protected function getPaymentDetails(): ?array
     {
+        $data = array();
         $card = $this->getCard();
 
         if ($this->getNonce()) {
@@ -173,7 +175,6 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         } elseif ($this->getCardReference()) {
             $data['source'] = 'tkn-' . $this->getCardReference();
         } elseif ($card instanceof CreditCard) {
-
             $card->validate();
 
             $data['card'] = $card->getNumber();
@@ -185,6 +186,12 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         }
 
         return $data;
+    }
+
+    protected function getBearer(): string
+    {
+        $token = sprintf(sprintf('%s:%s', $this->getApiSourceKey(), $this->getApiPin()));
+        return sprintf('Basic %s', base64_encode($token));
     }
 
     abstract protected function getHttpMethod(): string;

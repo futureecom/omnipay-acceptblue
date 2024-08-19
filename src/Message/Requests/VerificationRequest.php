@@ -8,10 +8,13 @@ class VerificationRequest extends AbstractRequest
 {
     public function getData(): array
     {
+        $data = array();
 
         $data['save_card'] = !$this->getSaveCard() ? false : true;
-        $data += $this->getPaymentDetails();
-
+        $data = [
+            ...$data,
+            ...$this->getPaymentDetails(),
+        ];
         if ($this->getTransactionId()) {
             $data['transaction_details']['order_number'] = $this->getTransactionId();
         }

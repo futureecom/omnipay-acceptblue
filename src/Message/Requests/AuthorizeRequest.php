@@ -8,10 +8,15 @@ class AuthorizeRequest extends AbstractRequest
 {
     public function getData(): array
     {
+        $data = array();
+
         $this->validate('amount');
         $data['amount'] = (float) $this->getAmount();
 
-        $data += $this->getPaymentDetails();
+        $data = [
+            ...$data,
+            ...$this->getPaymentDetails(),
+        ];
 
         $data['capture'] = $this->getCapture() ? true : false;
         $data['save_card'] = !$this->getSaveCard() ? false : true;

@@ -11,7 +11,6 @@ class CreditRequestTest extends TestCase
 
     protected function setUp(): void
     {
-
         parent::setUp();
 
         $this->request = new CreditRequest($this->getHttpClient(), $this->getHttpRequest());
@@ -33,6 +32,8 @@ class CreditRequestTest extends TestCase
 
         $this->request->initialize(
             [
+                'apiSourceKey' => 'abcd',
+                'apiPin' => '1234',
                 'card' => $card,
                 'amount' => 5.00,
             ]
@@ -48,6 +49,8 @@ class CreditRequestTest extends TestCase
     {
         $this->request->initialize(
             [
+                'apiSourceKey' => 'abcd',
+                'apiPin' => '1234',
                 'cardReference' => 'abcd',
                 'amount' => 5.00,
             ]
@@ -57,6 +60,5 @@ class CreditRequestTest extends TestCase
         $this->assertTrue($response->isSuccessful());
         $this->assertEquals('A', $response->getCode());
         $this->assertGreaterThanOrEqual(1, $response->getTransactionReference());
-
     }
 }
