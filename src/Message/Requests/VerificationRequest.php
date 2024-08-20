@@ -10,7 +10,7 @@ class VerificationRequest extends AbstractRequest
     {
         $data = [];
 
-        $data['save_card'] = !$this->getSaveCard() ? false : true;
+        $data['save_card'] = $this->getSaveCard();
         $data = [
             ...$data,
             ...$this->getPaymentDetails(),

@@ -18,8 +18,8 @@ class AuthorizeRequest extends AbstractRequest
             ...$this->getPaymentDetails(),
         ];
 
-        $data['capture'] = $this->getCapture() ? true : false;
-        $data['save_card'] = !$this->getSaveCard() ? false : true;
+        $data['capture'] = $this->getCapture();
+        $data['save_card'] = $this->getSaveCard();
 
         if ($this->getTransactionId()) {
             $data['transaction_details']['order_number'] = $this->getTransactionId();
