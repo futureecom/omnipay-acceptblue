@@ -8,7 +8,7 @@ class VerificationRequest extends AbstractRequest
 {
     public function getData(): array
     {
-        $data = array();
+        $data = [];
 
         $data['save_card'] = !$this->getSaveCard() ? false : true;
         $data = [

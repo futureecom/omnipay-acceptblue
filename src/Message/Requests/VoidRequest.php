@@ -8,7 +8,7 @@ class VoidRequest extends AbstractRequest
 {
     public function getData(): array
     {
-        $data = array();
+        $data = [];
 
         $this->validate('transactionReference');
 

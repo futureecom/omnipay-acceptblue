@@ -16,7 +16,7 @@ class CreateCardRequest extends AbstractRequest
      */
     public function getData(): array
     {
-        $data = array();
+        $data = [];
 
         $card = $this->getCard();
 

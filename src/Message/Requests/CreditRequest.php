@@ -8,7 +8,7 @@ class CreditRequest extends AbstractRequest
 {
     public function getData(): array
     {
-        $data = array();
+        $data = [];
 
         $this->validate('amount');
         $data['amount'] = (float) $this->getAmount();

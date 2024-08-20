@@ -19,7 +19,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->getParameter('apiSourceKey');
     }
 
-    public function setApiSourceKey($value): self
+    public function setApiSourceKey(string $value): self
     {
         return $this->setParameter('apiSourceKey', $value);
     }
@@ -29,7 +29,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->getParameter('apiPin');
     }
 
-    public function setApiPin($value): self
+    public function setApiPin(string $value): self
     {
         return $this->setParameter('apiPin', $value);
     }
@@ -39,7 +39,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->getParameter('nonce');
     }
 
-    public function setNonce($value): self
+    public function setNonce(string $value): self
     {
         return $this->setParameter('nonce', $value);
     }
@@ -49,27 +49,27 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->getParameter('source');
     }
 
-    public function setSource($value): self
+    public function setSource(string $value): self
     {
         return $this->setParameter('source', $value);
     }
 
-    public function getCapture(): ?string
+    public function getCapture(): bool
     {
-        return $this->getParameter('capture');
+        return $this->getParameter('capture') ?? false;
     }
 
-    public function setCapture($value): self
+    public function setCapture(bool $value): self
     {
         return $this->setParameter('capture', $value);
     }
 
-    public function getSaveCard(): ?string
+    public function getSaveCard(): bool
     {
-        return $this->getParameter('save_card');
+        return $this->getParameter('save_card') ?? true;
     }
 
-    public function setSaveCard($value): self
+    public function setSaveCard(bool $value): self
     {
         return $this->setParameter('save_card', $value);
     }
@@ -79,7 +79,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->getParameter('card_number');
     }
 
-    public function setCardNumber($value): self
+    public function setCardNumber(string $value): self
     {
         return $this->setParameter('card_number', $value);
     }
@@ -89,7 +89,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->getParameter('cvv');
     }
 
-    public function setCvv($value): self
+    public function setCvv(string $value): self
     {
         return $this->setParameter('cvv2', $value);
     }
@@ -99,7 +99,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->getParameter('billingAddress');
     }
 
-    public function setBillingAddress($value): self
+    public function setBillingAddress(string $value): self
     {
         return $this->setParameter('avs_address', $value);
     }
@@ -109,7 +109,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->getParameter('billingZip');
     }
 
-    public function setBillingZip($value): self
+    public function setBillingZip(string $value): self
     {
         return $this->setParameter('avs_zip', $value);
     }
@@ -119,7 +119,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->getParameter('expiryMonth');
     }
 
-    public function setExpiryMonth($value): self
+    public function setExpiryMonth(int $value): self
     {
         return $this->setParameter('expiryMonth', $value);
     }
@@ -129,7 +129,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->getParameter('expiryYear');
     }
 
-    public function setExpiryYear($value): self
+    public function setExpiryYear(int $value): self
     {
         return $this->setParameter('expiryYear', $value);
     }
@@ -139,7 +139,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->getTestMode() ? $this->testEndpoint : $this->liveEndpoint;
     }
 
-    public function sendData($data): ?Response
+    public function sendData(mixed $data): ?Response
     {
         $headers = [
             'Content-Type' => 'application/json',
@@ -167,7 +167,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
     protected function getPaymentDetails(): ?array
     {
-        $data = array();
+        $data = [];
         $card = $this->getCard();
 
         if ($this->getNonce()) {
@@ -187,11 +187,11 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             return $data;
         }
 
-        $data['expiry_month'] = $this->getExpiryMonth() ? (int) $this->getExpiryMonth() : null;
-        $data['expiry_year'] = $this->getExpiryYear() ? (int) $this->getExpiryYear() : null;
-        $data['cvv2'] = $this->getCvv() ? $this->getCvv() : null;
-        $data['avs_address'] = $this->getBillingAddress() ? $this->getBillingAddress() : null;
-        $data['avs_zip'] = $this->getBillingZip() ? $this->getBillingZip() : null;
+        $data['expiry_month'] = $this->getExpiryMonth();
+        $data['expiry_year'] = $this->getExpiryYear();
+        $data['cvv2'] = $this->getCvv();
+        $data['avs_address'] = $this->getBillingAddress();
+        $data['avs_zip'] = $this->getBillingZip();
 
         return $data;
     }

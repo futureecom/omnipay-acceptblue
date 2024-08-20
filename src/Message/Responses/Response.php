@@ -29,9 +29,7 @@ class Response extends AbstractResponse
 
     public function getTransactionReference(): ?string
     {
-        $request_data = $this->request->getParameters();
-
-        return $this->data['reference_number'] ?? $this->data['reference_number'] ?? $request_data['transactionReference'];
+        return $this->data['reference_number'] ?? null;
     }
 
     public function getMessage(): ?string
