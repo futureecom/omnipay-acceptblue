@@ -114,9 +114,9 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->setParameter('avs_zip', $value);
     }
 
-    public function getExpiryMonth(): ?string
+    public function getExpiryMonth(): ?int
     {
-        return $this->getParameter('expiryMonth');
+        return (int) $this->getParameter('expiryMonth');
     }
 
     public function setExpiryMonth(int $value): self
@@ -124,9 +124,9 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->setParameter('expiryMonth', $value);
     }
 
-    public function getExpiryYear(): ?string
+    public function getExpiryYear(): ?int
     {
-        return $this->getParameter('expiryYear');
+        return (int) $this->getParameter('expiryYear');
     }
 
     public function setExpiryYear(int $value): self
@@ -187,11 +187,13 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             return $data;
         }
 
-        $data['expiry_month'] = $this->getExpiryMonth();
-        $data['expiry_year'] = $this->getExpiryYear();
+        $data['expiry_month'] = (int) $this->getExpiryMonth();
+        $data['expiry_year'] = (int) $this->getExpiryYear();
         $data['cvv2'] = $this->getCvv();
         $data['avs_address'] = $this->getBillingAddress();
         $data['avs_zip'] = $this->getBillingZip();
+
+        $data = array_filter($data, static fn ($value) => $value !== null && $value !== '');
 
         return $data;
     }
