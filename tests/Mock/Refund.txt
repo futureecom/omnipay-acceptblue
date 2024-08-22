@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "version": "string",
+  "status": "Approved",
+  "status_code": "A",
+  "error_message": "string",
+  "error_code": "string",
+  "error_details": "string",
+  "reference_number": 1
+}
