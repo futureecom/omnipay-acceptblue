@@ -6,6 +6,7 @@ use JsonException;
 use Omnipay\AcceptBlue\Message\Responses\Response;
 use Omnipay\Common\CreditCard;
 use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Message\AbstractRequest as OmnipayAbstractRequest;
 
 abstract class AbstractRequest extends OmnipayAbstractRequest
@@ -156,8 +157,11 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         } catch (JsonException $e) {
             throw new InvalidRequestException(sprintf("Invalid fields sent %s", print_r($data, true)));
         }
-
-        return $this->createResponse($httpResponse->getBody()->getContents());
+        try {
+            return $this->createResponse($httpResponse->getBody()->getContents());
+        } catch (JsonException $e) {
+            throw new InvalidResponseException(sprintf("Invalid response sent. HTTP Status Code: %s; HTTP Reason: %s", $httpResponse->getStatusCode(), $httpResponse->getReasonPhrase()));
+        }
     }
 
     protected function createResponse(string $data): Response
