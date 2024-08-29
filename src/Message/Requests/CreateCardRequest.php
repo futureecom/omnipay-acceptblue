@@ -39,6 +39,11 @@ class CreateCardRequest extends AbstractRequest
         return parent::getEndpoint() . '/saved-cards';
     }
 
+    public function getOriginalRequest(): Request
+    {
+        return $this->httpRequest;
+    }
+
     protected function getHttpMethod(): string
     {
         return Request::METHOD_POST;
