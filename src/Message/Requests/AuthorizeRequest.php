@@ -16,6 +16,7 @@ class AuthorizeRequest extends AbstractRequest
         $data = [
             ...$data,
             ...$this->getPaymentDetails(),
+            ...$this->getAvsDetails(),
         ];
 
         $data['capture'] = $this->getCapture();

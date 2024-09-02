@@ -16,6 +16,7 @@ class CreditRequest extends AbstractRequest
         $data = [
             ...$data,
             ...$this->getPaymentDetails(),
+            ...$this->getAvsDetails(),
         ];
 
         if ($this->getTransactionId()) {

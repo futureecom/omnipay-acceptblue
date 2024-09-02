@@ -95,24 +95,14 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $this->setParameter('cvv2', $value);
     }
 
-    public function getBillingAddress(): ?string
+    public function getBillingAddress(): ?array
     {
         return $this->getParameter('billingAddress');
     }
 
-    public function setBillingAddress(string $value): self
+    public function setBillingAddress(array $value): self
     {
-        return $this->setParameter('avs_address', $value);
-    }
-
-    public function getBillingZip(): ?string
-    {
-        return $this->getParameter('billingZip');
-    }
-
-    public function setBillingZip(string $value): self
-    {
-        return $this->setParameter('avs_zip', $value);
+        return $this->setParameter('billingAddress', $value);
     }
 
     public function getExpiryMonth(): ?int
@@ -194,10 +184,18 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         $data['expiry_month'] = (int) $this->getExpiryMonth();
         $data['expiry_year'] = (int) $this->getExpiryYear();
         $data['cvv2'] = $this->getCvv();
-        $data['avs_address'] = $this->getBillingAddress();
-        $data['avs_zip'] = $this->getBillingZip();
 
         $data = array_filter($data, static fn ($value) => $value !== null && $value !== '');
+
+        return $data;
+    }
+
+    protected function getAvsDetails(): ?array
+    {
+        $data = [
+            'avs_address' => $this->getBillingAddress()['address_line1'] ?? null,
+            'avs_zip' => $this->getBillingAddress()['postal_code'] ?? null,
+        ];
 
         return $data;
     }
