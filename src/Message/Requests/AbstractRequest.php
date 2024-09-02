@@ -192,12 +192,12 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
     protected function getAvsDetails(): ?array
     {
-        $data = [
+        $billingAddress = $this->getBillingAddress();
+
+        return array_filter([
             'avs_address' => $this->getBillingAddress()['address_line1'] ?? null,
             'avs_zip' => $this->getBillingAddress()['postal_code'] ?? null,
-        ];
-
-        return $data;
+        ]);
     }
 
     protected function getBearer(): string
