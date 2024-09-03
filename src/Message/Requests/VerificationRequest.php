@@ -14,6 +14,7 @@ class VerificationRequest extends AbstractRequest
         $data = [
             ...$data,
             ...$this->getPaymentDetails(),
+            ...$this->getAvsDetails(),
         ];
         if ($this->getTransactionId()) {
             $data['transaction_details']['order_number'] = $this->getTransactionId();
